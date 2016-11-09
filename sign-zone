@@ -18,6 +18,6 @@ fi
 
 sed -i s/$SERIAL/$NEW_SERIAL/ $ZONEFILE
 
-dnssec-signzone -A -3 $SALT -o $ZONE -t $ZONEFILE
+dnssec-signzone -S -A -3 $SALT -o $ZONE -t $ZONEFILE
 
 service bind9 reload
