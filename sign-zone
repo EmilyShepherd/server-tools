@@ -11,7 +11,7 @@ DATE=$(date +%Y%m%d)
 
 if test ${SERIAL:0:8} -eq $DATE
 then
-    NEW_SERIAL=$(printf '%02d' $((${SERIAL:8} + 1)))
+    NEW_SERIAL=$DATE$(printf '%02d' $((${SERIAL:8} + 1)))
 else
     NEW_SERIAL=$DATE'00'
 fi
