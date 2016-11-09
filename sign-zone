@@ -1,0 +1,23 @@
+#!/bin/sh
+
+cd "/var/cache/bind"
+
+ZONE=$1
+ZONEFILE=/etc/bind/zones/db.$ZONE
+
+SALT=$(head -c 1000 /dev/random | sha1sum | cut -b 1-16)
+SERIAL=$(named-checkzone $ZONE $ZONEFILE | egrep -o '[0-9]{10}')
+DATE=$(date +%Y%m%d)
+
+if test ${SERIAL:0:8} -eq $DATE
+then
+    NEW_SERIAL=$(printf '%02d' $((${SERIAL:8} + 1)))
+else
+    NEW_SERIAL=$DATE'00'
+fi
+
+sed -i s/$SERIAL/$NEW_SERIAL/ $ZONEFILE
+
+dnssec-signzone -A -3 $SALT -o $ZONE -t $ZONEFILE
+
+service bind9 reload
